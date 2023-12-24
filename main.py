@@ -9,6 +9,7 @@ COMPANY_NAME = "Apple Inc"
 
 # ---------------------------- FUNCTIONS ------------------------------- #
 
+
 def get_stock_price(my_response):
     jdata = my_response.json()
     prior_day = datetime.now().day - 1
@@ -29,6 +30,7 @@ def get_stock_price(my_response):
     percentage = round((difference / float(prior_closing_price) * 100))
     return percentage
 
+
 def format_change_headline(percentage):
     stock_headline = ""
     if percentage < 0:
@@ -39,6 +41,7 @@ def format_change_headline(percentage):
         stock_headline = f"{STOCK}: -"
     return stock_headline
 
+
 def format_news(headlines):
     stories = {}
     for i in range(0, 9):
@@ -48,6 +51,7 @@ def format_news(headlines):
                 headline = headlines['articles'][i]['title']
                 stories[headline] = headlines['articles'][i]['content']
     return stories
+
 
 def format_message():
     my_msg = f"{stock_heading}\n"
@@ -67,7 +71,7 @@ av_parameters = {
     "symbol": STOCK,
     "interval": "60min",
     "outputsize": 30,
-"apikey": os.environ.get("AV_API_KEY")
+    "apikey": os.environ.get("AV_API_KEY")
 }
 
 av_response = requests.get("https://www.alphavantage.co/query", params=av_parameters)
