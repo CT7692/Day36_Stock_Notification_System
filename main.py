@@ -12,15 +12,15 @@ COMPANY_NAME = "Apple Inc"
 
 def get_stock_price(my_response):
     jdata = my_response.json()
-    prior_day = datetime.now().day - 1
-    day_before = datetime.now().day - 2
-    yesterday = \
-        (f"{datetime.now().year}-"
-         f"{datetime.now().month}-{prior_day} 19:00:00")
+    print(jdata)
+    now = datetime.now()
+    prior_day = now.day - 1
+    day_before = now.day - 2
+    yesterday = datetime(year=now.year, month=now.month, day=prior_day).strftime("%Y-%m-%d")
+    yesterday = f"{yesterday} 19:00:00"
 
-    day_before_y = \
-        (f"{datetime.now().year}-"
-         f"{datetime.now().month}-{day_before} 19:00:00")
+    day_before_y = datetime(year=now.year, month=now.month, day=day_before).strftime("%Y-%m-%d")
+    day_before_y = f"{day_before_y} 19:00:00"
 
     series_index = "Time Series (60min)"
     close = "4. close"
@@ -45,11 +45,14 @@ def format_change_headline(percentage):
 def format_news(headlines):
     stories = {}
     for i in range(0, 9):
-        publisher = headlines['articles'][i]['source']['name']
-        if len(stories) < 3:
-            if publisher != 'YouTube' and publisher != "Tom's Guide":
-                headline = headlines['articles'][i]['title']
-                stories[headline] = headlines['articles'][i]['content']
+        if i > 0:
+            publisher = headlines['articles'][i]['source']['name']
+            if len(stories) < 3:
+                if publisher != 'YouTube' and publisher != "Tom's Guide":
+                    headline = headlines['articles'][i]['title']
+                    stories[headline] = headlines['articles'][i]['content']
+        else:
+            return stories
     return stories
 
 
@@ -97,3 +100,4 @@ client = Client(twi_sid, t_auth_token)
 message = client.messages.create(
     body=full_msg, from_=os.environ.get("SOME_NUM"),
     to='+16362845670')
+
